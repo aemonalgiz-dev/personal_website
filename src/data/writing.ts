@@ -16,18 +16,11 @@ export const publications: Publication[] = [
     topics: ['Tokenization', 'Hallucinations', 'Homologies', 'LLMs'],
   },
   {
-    title: 'Glitch Tokens Compared to Fragile Tokens',
-    venue: 'Towards AI',
-    kind: 'Article',
-    url: '',
-    topics: ['Tokenization', 'Hallucinations', 'Homologies', 'LLMs'],
-  },
-  {
-    title: 'Hallucinations Related to Glitch and Fragile Tokens',
-    venue: 'Towards Deep Learning',
-    kind: 'Article',
-    url: '',
-    topics: ['Tokenization', 'Hallucinations', 'Homologies', 'LLMs'],
+    title: 'Stability Analysis of a Model for the Market Dynamics of a Smart Grid',
+    venue: 'IEEE',
+    kind: 'Paper',
+    url: 'https://www.academia.edu/176523276/Stability_analysis_of_a_model_for_the_market_dynamics_of_a_smart_grid',
+    topics: ['Smart grid', 'Stability analysis', 'Market dynamics'],
   },
   {
     title: 'A Generative AI Framework for Earth Observation Analysis',
@@ -50,6 +43,20 @@ export const publications: Publication[] = [
       'so that a researcher states the analysis and the framework works out ' +
       'which instruments, projections and computations it needs.',
     topics: ['Orchestration', 'LLMs', 'Earth observation'],
+  },
+  {
+    title: 'Glitch Tokens Compared to Fragile Tokens',
+    venue: 'Towards AI',
+    kind: 'Article',
+    url: '',
+    topics: ['Tokenization', 'Hallucinations', 'Homologies', 'LLMs'],
+  },
+  {
+    title: 'Hallucinations Related to Glitch and Fragile Tokens',
+    venue: 'Towards Deep Learning',
+    kind: 'Article',
+    url: '',
+    topics: ['Tokenization', 'Hallucinations', 'Homologies', 'LLMs'],
   },
   {
     title: 'KPIs: The Voice AI Agentic Trap',
