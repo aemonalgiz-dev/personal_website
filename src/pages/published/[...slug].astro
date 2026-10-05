@@ -1,0 +1,154 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('writing', ({ data }) => import.meta.env.DEV || !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+};
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const published = post.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <article class="article">
+    <header>
+      <p class="meta">
+        <a href="/published">Published work</a>
+        <span aria-hidden="true">·</span>
+        <time datetime={post.data.date.toISOString()}>{published}</time>
+      </p>
+      <h1>{post.data.title}</h1>
+      <p class="lede">{post.data.description}</p>
+      {
+        post.data.topics.length > 0 && (
+          <ul class="topics">
+            {post.data.topics.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class="body prose">
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .article { max-width: var(--measure); }
+
+  .article header {
+    padding-bottom: 2rem;
+    margin-bottom: 2.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .article header .meta {
+    display: flex;
+    gap: 0.6rem;
+    margin: 0 0 1rem;
+  }
+
+  .article header .meta a { text-decoration: none; color: var(--accent); }
+  .article header .meta a:hover { color: var(--accent-hover); }
+
+  .article h1 { margin-bottom: 1rem; }
+  .article header .lede { margin: 0; }
+
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    list-style: none;
+    margin: 1.15rem 0 0;
+    padding: 0;
+  }
+
+  .topics li {
+    margin: 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    background: var(--paper-sunk);
+    padding: 0.22em 0.55em;
+    border-radius: 2px;
+  }
+
+  .body { color: var(--ink-soft); }
+
+  .body :global(h2) {
+    font-size: 1.5rem;
+    margin: 2.5rem 0 0.9rem;
+  }
+
+  .body :global(h3) {
+    font-size: 1.15rem;
+    margin: 2rem 0 0.7rem;
+  }
+
+  .body :global(blockquote) {
+    margin: 1.75rem 0;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--rule-strong);
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  .body :global(pre) {
+    background: var(--paper-sunk);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .body :global(pre code) {
+    background: none;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  .body :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 2rem 0;
+    border: 1px solid var(--rule);
+  }
+
+  .body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.75rem 0;
+    font-size: 0.95rem;
+  }
+
+  .body :global(th),
+  .body :global(td) {
+    text-align: left;
+    padding: 0.55rem 0.75rem 0.55rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .body :global(th) {
+    font-family: var(--font-mono-stack);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+</style>

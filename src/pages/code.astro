@@ -1,0 +1,179 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import RepoItem from '../components/RepoItem.astro';
+import { getRepos } from '../lib/github';
+import { openSource } from '../data/community';
+import { site } from '../data/site';
+
+const repos = await getRepos();
+const hasRepos = repos.featured.length > 0 || repos.other.length > 0;
+---
+
+<Base
+  title="Code"
+  description="Open source work, quantization contributions to Rustformers, published quantized models, and a live listing of public GitHub repositories."
+  eyebrow="Code"
+  heading="What I have published"
+  lede="Most of what I have built belongs to the companies I built it for. What is here is my public work: open source contributions, published models, and libraries I write to share information with others, help others learn, and share the research I conduct."
+>
+  <Section label="Repositories">
+    {
+      repos.error && (
+        <p class="fallback">
+          The live GitHub listing is unavailable right now. {repos.error} You can
+          browse everything directly at{' '}
+          <a href={`https://github.com/${site.github}`} target="_blank" rel="noopener">
+            github.com/{site.github}
+          </a>
+          .
+        </p>
+      )
+    }
+
+    {
+      !repos.error && !hasRepos && (
+        <p class="fallback">
+          No public repositories found for{' '}
+          <a href={`https://github.com/${site.github}`} target="_blank" rel="noopener">
+            @{site.github}
+          </a>
+          .
+        </p>
+      )
+    }
+
+    {
+      repos.featured.length > 0 && (
+        <div class="repo-list">
+          {repos.featured.map((repo) => (
+            <RepoItem repo={repo} featured />
+          ))}
+        </div>
+      )
+    }
+
+    {
+      repos.other.length > 0 && (
+        <div class="other">
+          <h3 class="label">Other public work</h3>
+          <div class="repo-list">
+            {repos.other.map((repo) => (
+              <RepoItem repo={repo} />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      hasRepos && (
+        <p class="all-link">
+          <a href={`https://github.com/${site.github}`} target="_blank" rel="noopener">
+            All repositories on GitHub ↗
+          </a>
+        </p>
+      )
+    }
+  </Section>
+
+  <Section label="Open source">
+    <ul class="community">
+      {
+        openSource.map((c) => (
+          <li>
+            <h3>
+              {c.url ? (
+                <a href={c.url} target="_blank" rel="noopener">
+                  {c.name}
+                </a>
+              ) : (
+                c.name
+              )}
+              {c.role && <span class="role">{c.role}</span>}
+            </h3>
+            <p>{c.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+</Base>
+
+<style>
+  .fallback {
+    max-width: var(--measure);
+    color: var(--ink-muted);
+    padding: 1rem 1.15rem;
+    border-left: 2px solid var(--rule-strong);
+    background: var(--paper-sunk);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .repo-list { margin-top: 0.25rem; }
+
+  .other { margin-top: 2.5rem; }
+
+  .other .label {
+    margin: 0 0 0.4rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .other .repo-list :global(.repo:first-child) { border-top: 0; }
+
+  .all-link {
+    margin: 1.75rem 0 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.78rem;
+  }
+
+  .all-link a { text-decoration: none; color: var(--ink-muted); }
+  .all-link a:hover { color: var(--accent-hover); }
+
+  /* ---- Community -------------------------------------------------------- */
+
+  .community {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .community li {
+    margin: 0;
+    padding-block: 1.2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .community li:first-child { border-top: 0; padding-top: 0; }
+
+  .community h3 {
+    font-size: 1.08rem;
+    margin: 0 0 0.4rem;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .community h3 a { text-decoration: none; color: var(--accent); }
+  .community h3 a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+  .community .role {
+    font-family: var(--font-mono-stack);
+    font-size: 0.66rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .community p {
+    margin: 0;
+    max-width: 64ch;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+</style>

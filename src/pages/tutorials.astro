@@ -1,0 +1,253 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import { site } from '../data/site';
+
+const gh = `https://github.com/${site.github}`;
+const live = site.tutorials.url;
+
+const method = [
+  {
+    n: '01',
+    title: 'The problem that forced it',
+    body:
+      'Each concept starts with the problem that made it necessary, not a ' +
+      'timeline of who published what. A method is easier to understand when ' +
+      'you know what it was built to solve.',
+  },
+  {
+    n: '02',
+    title: 'In plain terms, and the mechanism',
+    body:
+      'Two explanations side by side: one for anyone, and one for the technical ' +
+      'reader who wants the underlying mechanism.',
+  },
+  {
+    n: '03',
+    title: 'Something you can poke',
+    body:
+      'A small interactive playground that both explanations narrate. It is ' +
+      'computed live by my oop_ml library through its API, so what you see is ' +
+      'the real algorithm, not a re-implementation in JavaScript.',
+  },
+];
+
+const parts = [
+  {
+    name: site.tutorials.libraryRepo,
+    role: 'The library',
+    body:
+      'oop_ml, my object-oriented machine learning library, written from scratch ' +
+      'on numpy. Everything the site teaches is implemented here first.',
+  },
+  {
+    name: site.tutorials.apiRepo,
+    role: 'The API',
+    body:
+      'Exposes the library over HTTP, so the site can request a fit and get back ' +
+      'the real intermediate values.',
+  },
+  {
+    name: site.tutorials.repo,
+    role: 'The site',
+    body:
+      'Next.js, React, TypeScript, and Tailwind. The playgrounds are hand-written ' +
+      'SVG driven by pointer events, fetching fits from the API.',
+  },
+];
+---
+
+<Base
+  title="Tutorials"
+  description="A free website for learning machine learning from core principles: classical statistical methods, neural networks, natural language processing, computer vision, agentic design, and evaluation."
+  eyebrow="Tutorials"
+  heading="Free machine learning tutorials"
+  lede="A free website for learning machine learning from core principles: classical statistical methods, neural networks, natural language processing, computer vision, agentic design, evaluation, and other key concepts."
+>
+  <Section label="Why I built it">
+    <p class="prose">
+      I support learning in machine learning and AI through this site, a YouTube
+      channel, and a Discord community of 75,000 members. The site exists because
+      I believe the fundamentals should be taught from core principles and be
+      freely available to anyone willing to work through them.
+    </p>
+  </Section>
+
+  <Section label="How each concept is taught">
+    <p class="prose intro">
+      Every concept on the site is taught the same way.
+    </p>
+    <ol class="method">
+      {
+        method.map((m) => (
+          <li>
+            <span class="method-n meta">{m.n}</span>
+            <div>
+              <h3>{m.title}</h3>
+              <p>{m.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Section label="How it is built">
+    <p class="prose">
+      Three components in three repositories, each deploying on its own cadence:
+      the library, the API that exposes it over HTTP, and the site, which calls
+      the API and never imports the library.
+    </p>
+    <ul class="parts">
+      {
+        parts.map((p) => (
+          <li>
+            <p class="part-head">
+              <a href={`${gh}/${p.name}`} target="_blank" rel="noopener">
+                {p.name}
+              </a>
+              <span class="part-role">{p.role}</span>
+            </p>
+            <p class="part-body">{p.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section label="Go there">
+    {
+      live ? (
+        <p class="prose">
+          The site is at{' '}
+          <a class="live" href={live} target="_blank" rel="noopener">
+            {live.replace(/^https?:\/\//, '')} <span aria-hidden="true">↗</span>
+          </a>
+          .
+        </p>
+      ) : (
+        <p class="prose pending">
+          The live URL is not wired up yet. Set <code>tutorials.url</code> in
+          <code>src/data/site.ts</code> and it will appear here and on the home
+          page. The three repositories above are public in the meantime.
+        </p>
+      )
+    }
+  </Section>
+</Base>
+
+<style>
+  .intro { margin-bottom: 1.75rem; color: var(--ink-soft); }
+
+  /* ---- Method ----------------------------------------------------------- */
+
+  .method {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .method li {
+    margin: 0;
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0 0.5rem;
+  }
+
+  .method li:first-child { border-top: 0; padding-top: 0; }
+
+  .method-n {
+    color: var(--accent);
+    padding-top: 0.35rem;
+  }
+
+  .method h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .method p {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  /* ---- Parts ------------------------------------------------------------ */
+
+  .parts {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+  }
+
+  .parts li {
+    margin: 0;
+    padding-block: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .parts li:first-child { border-top: 0; }
+
+  .part-head {
+    margin: 0 0 0.3rem;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .part-head a {
+    font-family: var(--font-mono-stack);
+    font-size: 0.95rem;
+    color: var(--accent);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .part-head a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.22em;
+  }
+
+  .part-role {
+    font-family: var(--font-mono-stack);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .part-body {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  /* ---- Outbound --------------------------------------------------------- */
+
+  .live {
+    font-family: var(--font-mono-stack);
+    font-size: 0.95rem;
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+    overflow-wrap: anywhere;
+  }
+
+  .pending {
+    color: var(--ink-muted);
+    padding: 1rem 1.15rem;
+    border-left: 2px solid var(--rule-strong);
+    background: var(--paper-sunk);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .pending code { margin-inline: 0.15em; }
+</style>

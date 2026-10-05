@@ -1,0 +1,124 @@
+---
+/**
+ * A YouTube video that costs nothing until it is played. The poster is served
+ * from /public, so the page makes no request to YouTube on load; pressing play
+ * swaps in the privacy-enhanced player.
+ */
+interface Props {
+  id: string;
+  /** Local path under /public, e.g. /media/gt7-lap.webp */
+  poster: string;
+  /** Describes the video for screen readers and the player title. */
+  label: string;
+}
+
+const { id, poster, label } = Astro.props;
+---
+
+<figure class="yt-embed">
+  <div class="yt" data-id={id} data-title={label}>
+    <button type="button" class="yt-play" aria-label={`Play video: ${label}`}>
+      <img src={poster} alt="" width="1280" height="720" loading="lazy" />
+      <span class="yt-icon" aria-hidden="true">
+        <svg viewBox="0 0 68 48" width="68" height="48">
+          <path
+            d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.2.3 34 .3 34 .3s-21.2 0-26.5 1.4a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6C12.8 47.7 34 47.7 34 47.7s21.2 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3Z"
+            fill="#f00"></path>
+          <path d="M45 24 27 14v20z" fill="#fff"></path>
+        </svg>
+      </span>
+    </button>
+  </div>
+  <figcaption class="yt-link">
+    <a href={`https://youtu.be/${id}`} target="_blank" rel="noopener">
+      Watch on YouTube <span aria-hidden="true">↗</span>
+    </a>
+  </figcaption>
+</figure>
+
+<script>
+  for (const el of document.querySelectorAll<HTMLElement>('.yt')) {
+    el.querySelector('.yt-play')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${el.dataset.id}?autoplay=1&rel=0&playsinline=1`;
+      iframe.title = el.dataset.title ?? 'YouTube video';
+      iframe.allow =
+        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      el.replaceChildren(iframe);
+      iframe.focus();
+    });
+  }
+</script>
+
+<style>
+  .yt-embed {
+    margin: 1.5rem 0 var(--rhythm);
+  }
+
+  .yt {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 3px;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+
+  .yt-play {
+    all: unset;
+    display: block;
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+  }
+
+  .yt-play:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -4px;
+  }
+
+  .yt-play img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .yt-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 0;
+    opacity: 0.88;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .yt-play:hover .yt-icon,
+  .yt-play:focus-visible .yt-icon {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  /* Created by the script, so it carries no scope attribute. */
+  .yt :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .yt-link {
+    margin: 0.45rem 0 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+
+  .yt-link a { color: inherit; text-decoration: none; }
+  .yt-link a:hover { color: var(--accent-hover); }
+</style>

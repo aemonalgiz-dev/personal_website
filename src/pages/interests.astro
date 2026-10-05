@@ -1,0 +1,147 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import { interests, volunteering } from '../data/community';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Interests"
+  description="The areas of machine learning I follow most closely, what I do outside of work, and where I volunteer my time."
+  eyebrow="Interests"
+  heading="Interests and volunteering"
+  lede="The areas of machine learning I follow most closely, what I do outside of work, and where I volunteer my time."
+>
+  <Section label="Interests">
+    <ul class="interests">
+      {
+        interests.map((i) => (
+          <li>
+            <h3>{i.title}</h3>
+            <p>{i.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section label="Volunteering">
+    <p class="prose vol-intro">
+      Mostly teaching, from developers picking up machine learning to K-12
+      students deciding whether engineering is for them.
+    </p>
+    <ul class="volunteering">
+      {
+        volunteering.map((v) => (
+          <li>
+            <h3>
+              {v.url ? (
+                <a href={v.url} target="_blank" rel="noopener">
+                  {v.name}
+                </a>
+              ) : (
+                v.name
+              )}
+              {v.role && <span class="v-role">{v.role}</span>}
+            </h3>
+            <p>{v.body}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="all-link">
+      <a href={site.youtube.url} target="_blank" rel="noopener">
+        The channel on YouTube <span aria-hidden="true">↗</span>
+      </a>
+    </p>
+  </Section>
+</Base>
+
+<style>
+  /* ---- Interests -------------------------------------------------------- */
+
+  /* One per row. A two-column grid makes the eye zigzag and gives each entry a
+     column too narrow to read comfortably. */
+  .interests {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .interests li {
+    margin: 0;
+    padding-block: 1.15rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .interests li:first-child { border-top: 0; padding-top: 0; }
+
+  .interests h3 {
+    font-size: 1.08rem;
+    margin: 0 0 0.35rem;
+  }
+
+  .interests p {
+    margin: 0;
+    max-width: 64ch;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  /* ---- Volunteering ----------------------------------------------------- */
+
+  .vol-intro { margin-bottom: 1.5rem; color: var(--ink-soft); }
+
+  .volunteering {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .volunteering li {
+    margin: 0;
+    padding-block: 1.15rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .volunteering li:first-child { border-top: 0; padding-top: 0; }
+
+  .volunteering h3 {
+    font-size: 1.08rem;
+    margin: 0 0 0.35rem;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .volunteering h3 a { text-decoration: none; color: var(--accent); }
+  .volunteering h3 a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+  .v-role {
+    font-family: var(--font-mono-stack);
+    font-size: 0.66rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .volunteering p {
+    margin: 0;
+    max-width: 64ch;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .all-link {
+    margin: 1.6rem 0 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.78rem;
+  }
+
+  .all-link a { text-decoration: none; color: var(--ink-muted); }
+  .all-link a:hover { color: var(--accent-hover); }
+</style>

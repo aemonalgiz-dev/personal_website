@@ -1,0 +1,83 @@
+---
+interface Props {
+  label: string;
+  /** Optional heading rendered above the slot content. */
+  title?: string;
+  id?: string;
+}
+
+const { label, title, id } = Astro.props;
+---
+
+<section class="section" id={id}>
+  <div class="section-label">
+    <h2 class="label">{label}</h2>
+  </div>
+  <div class="section-body">
+    {title && <h3 class="section-title">{title}</h3>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    display: grid;
+    gap: 0.75rem 2.5rem;
+    padding-block: clamp(2.25rem, 5vw, 3.25rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .section:first-of-type { border-top: 0; padding-top: 0; }
+
+  /* Grid children default to min-width:auto, which lets a long token push the
+     track wider than the viewport. */
+  .section-label,
+  .section-body { min-width: 0; }
+
+  .section-label { position: relative; }
+
+  /* Loud enough to be found when scanning the page, with an accent rule to
+     anchor it against the body text sitting alongside. */
+  .section-label h2 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.25;
+    color: var(--ink);
+    position: sticky;
+    top: 5rem;
+  }
+
+  .section-label h2::before {
+    content: '';
+    display: block;
+    width: 1.9rem;
+    height: 2px;
+    margin-bottom: 0.65rem;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-size: 1.45rem;
+    margin: 0 0 1.25rem;
+    letter-spacing: -0.015em;
+  }
+
+  @media (min-width: 52rem) {
+    .section {
+      grid-template-columns: 11rem minmax(0, 1fr);
+    }
+    .section-label h2 { padding-top: 0.3rem; }
+  }
+
+  /* Stacked: the label becomes a banner above its content rather than a
+     margin note, so it needs the breathing room the column gave it. */
+  @media (max-width: 51.99rem) {
+    .section { gap: 1.15rem 2.5rem; }
+  }
+
+  @media (max-width: 34rem) {
+    .section-label h2 { position: static; }
+  }
+</style>

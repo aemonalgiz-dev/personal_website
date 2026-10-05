@@ -1,0 +1,450 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import YouTubeEmbed from '../components/YouTubeEmbed.astro';
+import { Image } from 'astro:assets';
+import { site } from '../data/site';
+import corgiRed from '../assets/dogs/corgi-red.webp';
+import shepherdMix from '../assets/dogs/shepherd-mix.webp';
+import corgiTri from '../assets/dogs/corgi-tri.webp';
+import threeDogs from '../assets/dogs/three-dogs.webp';
+import headshot from '../assets/headshot.webp';
+
+const dogs = [
+  { src: corgiRed, alt: 'A red and white corgi looking up at the camera' },
+  { src: shepherdMix, alt: 'A tan and black mixed-breed dog sitting on a couch' },
+  { src: corgiTri, alt: 'A black, white and tan corgi resting on the back of a couch' },
+  { src: threeDogs, alt: 'Three dogs lined up along the back of a couch' },
+];
+
+const linkedinLabel = site.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+
+const currently = [
+  {
+    what: 'Principal Machine Learning Researcher',
+    where: 'Analytical Mechanics Associates (NASA)',
+    detail:
+      'Researching agentic processes for GIS automation with the Center for Earth Observation Sciences: urbanization, burn scars, environmental change from satellite spectra.',
+    href: '/published',
+  },
+];
+
+const sections = [
+  {
+    href: '/experience',
+    label: 'Experience',
+    blurb:
+      'Natural language processing, medical and pharmaceutical prior authorizations, automated medical billing and coding, agentic AI, and engineering leadership.',
+  },
+  {
+    href: '/code',
+    label: 'Code',
+    blurb:
+      'My public GitHub, demonstrating quantization, my machine learning library, fragile-token detector, and other machine learning related projects.',
+  },
+  {
+    href: '/published',
+    label: 'Published Work',
+    blurb:
+      'Research on fragile tokens, automated earth observation, best practices for agentic AI, and YouTube tutorials.',
+  },
+  {
+    href: '/interests',
+    label: 'Interests',
+    blurb:
+      'Undertrained tokens, inference cost, plasma dynamics, racing, and the teaching and volunteer work I give time to.',
+  },
+  {
+    href: '/tutorials',
+    label: 'Tutorials',
+    blurb:
+      'A free website for learning machine learning from core principles, with interactive playgrounds computed by my own library.',
+  },
+];
+---
+
+<Base>
+  <div class="hero">
+    <div class="hero-photo">
+      <Image
+        src={headshot}
+        alt="Jeffrey Gordon"
+        widths={[160, 320]}
+        sizes="7.5rem"
+        loading="eager"
+      />
+    </div>
+    <div>
+      <h1>Jeffrey Gordon</h1>
+      <p class="hero-sub">{site.tagline} - {site.location}</p>
+    </div>
+  </div>
+
+  <Section label="My Professional Side">
+    <div class="intro prose">
+      <p>
+        My name is Jeffrey Gordon. I am an AI and machine learning expert with
+        twenty years of experience, specializing in natural language processing.
+      </p>
+      <p>
+        My experience ranges from early rule engines, taxonomies, ontologies, and
+        knowledge graphs to the latest language models. I have focused
+        extensively on healthcare and governance, risk, and compliance.
+      </p>
+      <p>
+        In the past ten years, I have discovered my passion for technical-based
+        leadership, taking a people-first approach to inspire teams through
+        collaboration and software engineering mentorship. The teams I have led
+        consistently meet objectives and exceed KPIs. An outcome I attribute to
+        this close collaboration, regular feedback, and strong cross-team
+        communication with leadership.
+      </p>
+      <p>
+        Alongside applied AI expertise, I have a deep understanding of the
+        foundational mechanisms of modern AI systems. My open-source
+        contributions include implementing GPTQ 4-bit NormalFloat quantization,
+        LoRA and QLoRA fine-tuning, and developing techniques to analyze
+        transformer architectures. My recent research examines hallucination
+        mechanisms and their relationship to fragile tokens. I also support
+        learning in machine learning and AI through a free tutorial website, a
+        YouTube channel, and a Discord community of 75,000 members.
+      </p>
+      <p>
+        In my work with Agentic AI systems, I place particular emphasis on
+        deterministic guards, MCPs, tool contracts that define the agent's
+        sandbox, and human-in-the-loop feedback. Much of my work focuses on voice
+        applications where agents interact with customers and automated software
+        development pipelines. I believe this makes evaluation and observability
+        not only essential but required. I design pipelines linking containment,
+        latency, and agent quality to business KPIs. This work has driven my
+        research in agentic safety because critical failure modes often don't
+        appear in standard demonstrations.
+      </p>
+    </div>
+  </Section>
+
+  <Section label="My Personal Side">
+    <div class="intro prose">
+      <p>
+        When I'm not at my computer, I'm racing. I have an SCCA license and spend
+        most weekends at the track or prepping a car. Currently, I am building a
+        NASA-compliant Type-65 Coupe-R replica from Factory Five Racing. While,
+        yes, originally a Ford, I am blasphemously mounting an LSX motor mated to
+        a dual-clutch paddle-shift transmission.
+      </p>
+      <YouTubeEmbed
+        id="t4Vno6aQIzU"
+        poster="/media/vette-run.webp"
+        label="In-car footage of a lap on track, with a telemetry overlay"
+      />
+      <p>
+        I also race in simulators and am currently ranked in the top 100 for both
+        Gran Turismo 7 and Assetto Corsa Competizione. While nothing beats real
+        seat time, it is certainly far less expensive than tires and brakes. It
+        also offers a great way to learn a track before actually racing on it.
+      </p>
+      <YouTubeEmbed
+        id="PCQOkjzujn0"
+        poster="/media/gt7-lap.webp"
+        label="A cockpit-view lap in Gran Turismo 7"
+      />
+      <p>
+        I began in mechanical engineering, hoping to build race cars, with a
+        particular interest in aerodynamics. If your car can't stick the ground,
+        it doesn't matter how much power it can generate. Outside of racing, I
+        spend time learning computational physics, most recently plasma
+        dynamics; it's more interesting than it sounds.
+      </p>
+      <p>
+        I love dogs and have been involved in dog rescue for most of my life, and
+        my own dogs came to me as rescues too. If you ever visit, expect to be
+        greeted by several of them, most likely from the back of the couch.
+      </p>
+    </div>
+    <ul class="dogs" aria-label="Photos of my dogs">
+      {
+        dogs.map((d) => (
+          <li>
+            <Image
+              src={d.src}
+              alt={d.alt}
+              widths={[320, 640]}
+              sizes="(min-width: 52rem) 12rem, 55vw"
+              loading="lazy"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section label="Currently">
+    <ul class="currently">
+      {
+        currently.map((c) => (
+          <li>
+            <p class="c-what">
+              {c.what}
+              <span class="c-where">{c.where}</span>
+            </p>
+            <p class="c-detail">{c.detail}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section label="Elsewhere">
+    <ul class="sections">
+      {
+        sections.map((s) => (
+          <li>
+            <a
+              href={s.href}
+              target={s.external ? '_blank' : undefined}
+              rel={s.external ? 'noopener' : undefined}
+            >
+              <span class="s-label">
+                {s.label}
+                <span class="s-arrow" aria-hidden="true">
+                  {s.external ? '↗' : '→'}
+                </span>
+              </span>
+              <span class="s-blurb">{s.blurb}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section label="Contact">
+    <p class="prose">The fastest way to reach me is email.</p>
+    <ul class="contact-links">
+      <li>
+        <span class="c-key">Email</span>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </li>
+      <li>
+        <span class="c-key">LinkedIn</span>
+        <a href={site.linkedin} target="_blank" rel="noopener">{linkedinLabel}</a>
+      </li>
+      <li>
+        <span class="c-key">GitHub</span>
+        <a href={`https://github.com/${site.github}`} target="_blank" rel="noopener">
+          github.com/{site.github}
+        </a>
+      </li>
+      <li>
+        <span class="c-key">YouTube</span>
+        <a href={site.youtube.url} target="_blank" rel="noopener">
+          youtube.com/@{site.youtube.handle}
+        </a>
+      </li>
+    </ul>
+  </Section>
+</Base>
+
+
+<style>
+  .hero {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem 1.6rem;
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .hero-photo {
+    flex: 0 0 auto;
+    width: clamp(5.25rem, 18vw, 7.5rem);
+    aspect-ratio: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: var(--paper-sunk);
+  }
+
+  .hero-photo :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero h1 { margin-bottom: 0.6rem; }
+
+  .hero-sub {
+    margin: 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.82rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .intro p { color: var(--ink-soft); }
+
+  /* ---- Currently -------------------------------------------------------- */
+
+  .currently {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .currently li {
+    margin: 0;
+    padding-block: 1.05rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .currently li:first-child { border-top: 0; padding-top: 0; }
+
+  .c-what {
+    margin: 0 0 0.35rem;
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 0.7rem;
+  }
+
+  .c-where {
+    font-family: var(--font-mono-stack);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .c-detail {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  /* ---- Elsewhere -------------------------------------------------------- */
+
+  .sections {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sections li {
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sections li:first-child { border-top: 0; }
+
+  .sections a {
+    display: grid;
+    gap: 0.15rem 2rem;
+    padding-block: 1rem;
+    text-decoration: none;
+  }
+
+  .s-label {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .s-arrow {
+    color: var(--accent);
+    margin-left: 0.4rem;
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+
+  .sections a:hover .s-label { color: var(--accent-hover); }
+  .sections a:hover .s-arrow { transform: translateX(3px); }
+
+  .s-blurb {
+    color: var(--ink-muted);
+    font-size: 1rem;
+    line-height: 1.55;
+    max-width: 58ch;
+  }
+
+  @media (min-width: 46rem) {
+    .sections a { grid-template-columns: 11rem minmax(0, 1fr); align-items: baseline; }
+  }
+
+  /* One row, never a grid. On narrow screens the row scrolls sideways
+     rather than wrapping into a 2 x 2 block. */
+  .dogs {
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0 0 0.25rem;
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dogs li {
+    margin: 0;
+    flex: 0 0 55%;
+    scroll-snap-align: start;
+  }
+
+  .dogs img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 1px solid var(--rule);
+    background: var(--paper-sunk);
+  }
+
+  @media (min-width: 52rem) {
+    .dogs { overflow-x: visible; }
+    .dogs li { flex: 1 1 0; }
+  }
+
+  .contact-links {
+    list-style: none;
+    margin: 1.35rem 0 0;
+    padding: 0;
+    max-width: 34rem;
+  }
+
+  .contact-links li {
+    margin: 0;
+    padding-block: 0.6rem;
+    border-top: 1px solid var(--rule);
+    display: grid;
+    gap: 0.1rem 1rem;
+  }
+
+  .contact-links li:first-child { border-top: 0; }
+
+  .c-key {
+    font-family: var(--font-mono-stack);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .contact-links a {
+    overflow-wrap: anywhere;
+    text-decoration-color: var(--accent);
+  }
+
+  @media (min-width: 30rem) {
+    .contact-links li {
+      grid-template-columns: 6rem minmax(0, 1fr);
+      align-items: baseline;
+    }
+  }
+</style>

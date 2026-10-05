@@ -1,0 +1,156 @@
+---
+import type { Role } from '../data/experience';
+
+interface Props {
+  role: Role;
+  /** Compact entries drop the summary figures and stack chips. */
+  compact?: boolean;
+}
+
+const { role, compact = false } = Astro.props;
+---
+
+<article class="role">
+  <header>
+    <h3>{role.title}</h3>
+    <p class="org">
+      <span class="org-name">{role.org}</span>
+      {role.note && <span class="org-note">{role.note}</span>}
+    </p>
+    <p class="meta role-when">
+      <span>{role.start}–{role.end}</span>
+      <span class="dot" aria-hidden="true">·</span>
+      <span>{role.location}</span>
+    </p>
+  </header>
+
+  {role.summary && <p class="role-summary prose">{role.summary}</p>}
+
+  {
+    !compact && role.figures && role.figures.length > 0 && (
+      <div class="figure-row role-figures">
+        {role.figures.map((f) => (
+          <div>
+            <span class="figure-value">{f.value}</span>
+            <span class="figure-label meta">{f.label}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  <ul class="role-points prose">
+    {role.points.map((p) => <li>{p}</li>)}
+  </ul>
+
+  {
+    !compact && role.stack && role.stack.length > 0 && (
+      <ul class="stack" aria-label="Technologies">
+        {role.stack.map((s) => (
+          <li>{s}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .role + .role {
+    margin-top: clamp(2.25rem, 5vw, 3rem);
+    padding-top: clamp(2.25rem, 5vw, 3rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .role h3 {
+    font-size: 1.3rem;
+    margin: 0 0 0.3rem;
+  }
+
+  .org {
+    margin: 0 0 0.4rem;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .org-name {
+    font-size: 1.05rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .org-note {
+    font-family: var(--font-mono-stack);
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    padding: 0.12em 0.45em;
+  }
+
+  .role-when {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .dot { color: var(--ink-faint); }
+
+  .role-summary {
+    margin: 1.1rem 0 0;
+    color: var(--ink-soft);
+  }
+
+  .role-figures {
+    margin-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .role-points {
+    margin: 1.35rem 0 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .role-points li {
+    position: relative;
+    padding-left: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: var(--ink-soft);
+  }
+
+  .role-points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 0.42rem;
+    height: 1px;
+    background: var(--rule-strong);
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    list-style: none;
+    margin: 1.35rem 0 0;
+    padding: 0;
+  }
+
+  .stack li {
+    margin: 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-muted);
+    background: var(--paper-sunk);
+    padding: 0.22em 0.55em;
+    border-radius: 2px;
+  }
+</style>

@@ -1,0 +1,268 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import { publications } from '../data/writing';
+import { site } from '../data/site';
+import { getVideos } from '../lib/youtube';
+
+const videos = await getVideos();
+
+const posts = (await getCollection('writing', ({ data }) => import.meta.env.DEV || !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base
+  title="Published Work"
+  description="Papers on fragile tokens, earth observation and LLM orchestration; articles on voice AI evaluation; and a back catalogue of machine learning videos."
+  eyebrow="Published work"
+  heading="Papers, articles and video"
+  lede="Peer-reviewed work, the shorter pieces written when something from the day job turns out to generalize past it, and several years of teaching videos."
+>
+  <Section label="Recent Papers">
+    <ul class="pubs">
+      {
+        publications.map((p) => (
+          <li>
+            <p class="pub-kind meta">
+              <span>{p.kind}</span>
+              {p.venue && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <span class="venue">{p.venue}</span>
+                </>
+              )}
+            </p>
+            <h3>
+              {p.url ? (
+                <a href={p.url} target="_blank" rel="noopener">
+                  {p.title} <span aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                p.title
+              )}
+            </h3>
+            {p.summary && <p class="pub-summary">{p.summary}</p>}
+            {p.topics.length > 0 && (
+              <ul class="topics">
+                {p.topics.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  {
+    posts.length > 0 && (
+      <Section label="Notes">
+        <ul class="posts">
+          {posts.map((post) => (
+            <li>
+              <p class="meta">
+                {fmt(post.data.date)}
+                {post.data.draft && <span class="draft">Draft</span>}
+              </p>
+              <h3>
+                <a href={`/published/${post.id}`}>{post.data.title}</a>
+              </h3>
+              <p class="post-desc">{post.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
+
+  <Section label="Videos">
+    <p class="prose video-intro">
+      Machine learning explained on the channel: architectures, quantization,
+      fine-tuning and the papers behind them, worked through rather than
+      summarized.
+    </p>
+
+    {
+      videos.error && (
+        <p class="fallback">
+          The video listing is unavailable right now. {videos.error} The channel
+          is at{' '}
+          <a href={site.youtube.url} target="_blank" rel="noopener">
+            youtube.com/@{site.youtube.handle}
+          </a>
+          .
+        </p>
+      )
+    }
+
+    {
+      videos.videos.length > 0 && (
+        <>
+          <ol class="videos">
+            {videos.videos.map((v) => (
+              <li>
+                <a href={v.url} target="_blank" rel="noopener">
+                  <span class="v-title">{v.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+          <p class="all-link">
+            <a href={site.youtube.url} target="_blank" rel="noopener">
+              {videos.truncated
+                ? 'The rest of the catalogue on YouTube ↗'
+                : 'The channel on YouTube ↗'}
+            </a>
+          </p>
+        </>
+      )
+    }
+  </Section>
+
+  <Section label="Teaching">
+    <p class="prose">
+      Outside of papers I teach: a{' '}
+      <a href="/tutorials">tutorial site</a>,
+      a YouTube channel, and a 75,000-person Discord. The
+      material is ordered the way it has to be learned rather than the way it was
+      invented, which is the main thing missing when you learn this from
+      configuration files.
+    </p>
+  </Section>
+</Base>
+
+<style>
+  .pubs,
+  .posts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .pubs > li,
+  .posts > li {
+    margin: 0;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .pubs > li:first-child,
+  .posts > li:first-child { border-top: 0; padding-top: 0; }
+
+  .pub-kind {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .venue { color: var(--accent); }
+
+  .pubs h3,
+  .posts h3 {
+    font-size: 1.25rem;
+    margin: 0 0 0.55rem;
+    max-width: 46ch;
+  }
+
+  .pubs h3 a,
+  .posts h3 a { text-decoration: none; }
+  .pubs h3 a:hover,
+  .posts h3 a:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .pub-summary,
+  .post-desc {
+    margin: 0;
+    max-width: 64ch;
+    color: var(--ink-muted);
+    font-size: 1.02rem;
+    line-height: 1.55;
+  }
+
+  .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    list-style: none;
+    margin: 0.85rem 0 0;
+    padding: 0;
+  }
+
+  .topics li {
+    margin: 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    background: var(--paper-sunk);
+    padding: 0.22em 0.55em;
+    border-radius: 2px;
+  }
+
+  /* ---- Video ------------------------------------------------------------ */
+
+  .video-intro { margin-bottom: 1.5rem; color: var(--ink-soft); }
+
+  .videos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .videos li {
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .videos li:first-child { border-top: 0; }
+
+  .videos a {
+    display: block;
+    padding-block: 0.7rem;
+    text-decoration: none;
+  }
+
+  .v-title {
+    font-size: 1.02rem;
+    line-height: 1.45;
+    max-width: 62ch;
+  }
+
+  .videos a:hover .v-title { color: var(--accent-hover); }
+
+  .fallback {
+    max-width: var(--measure);
+    color: var(--ink-muted);
+    padding: 1rem 1.15rem;
+    border-left: 2px solid var(--rule-strong);
+    background: var(--paper-sunk);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .all-link {
+    margin: 1.5rem 0 0;
+    font-family: var(--font-mono-stack);
+    font-size: 0.78rem;
+  }
+
+  .all-link a { text-decoration: none; color: var(--ink-muted); }
+  .all-link a:hover { color: var(--accent-hover); }
+
+  .posts .meta { margin: 0 0 0.4rem; display: flex; gap: 0.75rem; }
+
+  .draft {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.68rem;
+  }
+</style>

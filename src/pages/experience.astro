@@ -1,0 +1,196 @@
+---
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import RoleEntry from '../components/RoleEntry.astro';
+import { site } from '../data/site';
+import {
+  advisory,
+  currentRoles,
+  education,
+  languages,
+  pastRoles,
+  skills,
+} from '../data/experience';
+---
+
+<Base
+  title="Experience"
+  description="Two decades of machine learning work: voice AI, prior authorization automation, mineral provenance, circuit reconstruction, and medical NLP."
+  eyebrow="Experience"
+  heading="Twenty years of building and leading"
+  lede="Five industries and one job description: get a model accurate enough, fast enough and cheap enough that someone outside engineering will sign off on it. Each role below says what it was measured on."
+>
+  <Section label="Now">
+    {currentRoles.map((role) => <RoleEntry role={role} />)}
+  </Section>
+
+  <Section label="Previously">
+    {pastRoles.map((role) => <RoleEntry role={role} />)}
+  </Section>
+
+  <Section label="Advisory">
+    {advisory.map((role) => <RoleEntry role={role} compact />)}
+  </Section>
+
+  <Section label="Education">
+    <ul class="education">
+      {
+        education.map((d) => (
+          <li>
+            <h3>{d.degree}</h3>
+            <p class="school">{d.school}</p>
+            <p class="meta">
+              {d.years} <span aria-hidden="true">·</span> {d.location}
+            </p>
+            <ul class="degree-detail">
+              {d.detail.map((line) => (
+                <li set:html={line} />
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section label="Skills">
+    <div class="skills">
+      {
+        skills.map((group) => (
+          <div>
+            <h3>{group.heading}</h3>
+            <ul>
+              {group.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="languages">
+      <h3>Languages</h3>
+      <ul>
+        {
+          languages.map((l) => (
+            <li>
+              <span class="lang-name">{l.name}</span>
+              <span class="meta">{l.level}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  <Section label="Contact">
+    <p class="prose">
+      If any of this is relevant to something you are building, email me at{' '}
+      <a href={`mailto:${site.email}`}>{site.email}</a>.
+      {
+        site.resume && (
+          <>
+            {' '}
+            A PDF résumé is <a href={`/${site.resume}`}>here</a>.
+          </>
+        )
+      }
+    </p>
+  </Section>
+</Base>
+
+<style>
+  .education {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .education > li {
+    margin: 0;
+    padding-block: 1.35rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .education > li:first-child { border-top: 0; padding-top: 0; }
+
+  .education h3 { font-size: 1.15rem; margin: 0 0 0.25rem; }
+
+  .school {
+    margin: 0 0 0.3rem;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.02rem;
+  }
+
+  .education .meta { margin: 0; }
+
+  .degree-detail {
+    list-style: none;
+    margin: 0.7rem 0 0;
+    padding: 0;
+  }
+
+  .degree-detail li {
+    margin: 0 0 0.3rem;
+    color: var(--ink-muted);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  /* ---- Skills ----------------------------------------------------------- */
+
+  /* Stacked, one group under the next. Side-by-side columns make the reading
+     order ambiguous and squeeze each entry into an uncomfortably narrow measure. */
+  .skills > div + div {
+    margin-top: 1.85rem;
+  }
+
+  .skills h3,
+  .languages h3 {
+    font-size: 0.95rem;
+    margin: 0 0 0.65rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .skills ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .skills li {
+    margin: 0 0 0.35rem;
+    color: var(--ink-muted);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .languages { margin-top: 2rem; }
+
+  .languages ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 26rem;
+  }
+
+  .languages li {
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 0.4rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .languages li:first-child { border-top: 0; }
+
+  .lang-name {
+    font-family: var(--font-mono-stack);
+    font-size: 0.92rem;
+  }
+</style>

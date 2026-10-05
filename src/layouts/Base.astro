@@ -1,0 +1,349 @@
+---
+import { Font } from 'astro:assets';
+import { site, nav } from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Rendered above the page heading as a small mono label. */
+  eyebrow?: string;
+  heading?: string;
+  lede?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  eyebrow,
+  heading,
+  lede,
+} = Astro.props;
+
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://example.com');
+const here = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <meta name="author" content={site.name} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta name="twitter:card" content="summary" />
+
+    <Font cssVariable="--font-serif" preload />
+    <Font cssVariable="--font-mono" />
+
+    <script is:inline>
+      // Applied before paint so the correct palette is never repainted.
+      try {
+        const stored = localStorage.getItem('theme');
+        if (stored === 'light' || stored === 'dark') {
+          document.documentElement.dataset.theme = stored;
+        }
+      } catch {}
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="masthead">
+      <div class="masthead-inner">
+        <a class="wordmark" href="/">
+          <span class="wordmark-name">{site.name}</span>
+          <span class="wordmark-role">{site.tagline}</span>
+        </a>
+
+        <nav aria-label="Primary">
+          <ul>
+            {
+              nav.map((item) => {
+                const external = 'external' in item && item.external;
+                const current = !external && here === item.href.replace(/\/$/, '');
+                return (
+                  <li>
+                    <a
+                      href={item.href}
+                      aria-current={current ? 'page' : undefined}
+                      target={external ? '_blank' : undefined}
+                      rel={external ? 'noopener' : undefined}
+                    >
+                      {item.label}
+                      {external && (
+                        <svg class="ext" viewBox="0 0 10 10" aria-hidden="true">
+                          <path
+                            d="M2.5 7.5 7.5 2.5M3.6 2.5h3.9v3.9"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.1"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      )}
+                    </a>
+                  </li>
+                );
+              })
+            }
+            <li>
+              <button
+                type="button"
+                id="theme-toggle"
+                aria-label="Switch color theme"
+                title="Switch color theme"
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true" width="14" height="14">
+                  <path
+                    d="M8 1.5a6.5 6.5 0 1 0 6.5 6.5A5 5 0 0 1 8 1.5Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      {
+        (eyebrow || heading || lede) && (
+          <div class="page-head">
+            {eyebrow && <p class="label">{eyebrow}</p>}
+            {heading && <h1>{heading}</h1>}
+            {lede && <p class="lede prose">{lede}</p>}
+          </div>
+        )
+      }
+      <slot />
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <p class="meta">
+          {site.name} · {site.location}
+        </p>
+        <ul class="footer-links">
+          <li><a href={`mailto:${site.email}`}>Email</a></li>
+          <li><a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
+          <li>
+            <a href={`https://github.com/${site.github}`} target="_blank" rel="noopener">
+              GitHub
+            </a>
+          </li>
+          {
+            site.resume && (
+              <li>
+                <a href={`/${site.resume}`}>Résumé (PDF)</a>
+              </li>
+            )
+          }
+        </ul>
+      </div>
+    </footer>
+
+    <script is:inline>
+      (() => {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          const root = document.documentElement;
+          const systemDark = matchMedia('(prefers-color-scheme: dark)').matches;
+          const current = root.dataset.theme || (systemDark ? 'dark' : 'light');
+          const next = current === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          try {
+            localStorage.setItem('theme', next);
+          } catch {}
+        });
+      })();
+    </script>
+  </body>
+</html>
+
+<style>
+  /* ---- Masthead --------------------------------------------------------- */
+
+  .masthead {
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .masthead-inner,
+  .footer-inner {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+  }
+
+  .masthead-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-block: 0.9rem;
+  }
+
+  .wordmark {
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+  }
+
+  .wordmark-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .wordmark-role {
+    font-family: var(--font-mono-stack);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .wordmark:hover .wordmark-name { color: var(--accent-hover); }
+
+  nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem clamp(0.9rem, 2.5vw, 1.6rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav li { margin: 0; }
+
+  nav a {
+    font-family: var(--font-mono-stack);
+    font-size: 0.76rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+    white-space: nowrap;
+  }
+
+  nav a:hover { color: var(--accent-hover); }
+
+  nav a[aria-current='page'] {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+
+  .ext {
+    width: 0.6em;
+    height: 0.6em;
+    margin-left: 0.25em;
+    vertical-align: 0.05em;
+    opacity: 0.6;
+  }
+
+  #theme-toggle {
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 0;
+    padding: 0.2rem;
+    margin: 0;
+    color: var(--ink-faint);
+    cursor: pointer;
+    line-height: 0;
+  }
+
+  #theme-toggle:hover { color: var(--accent-hover); }
+
+  /* ---- Main ------------------------------------------------------------- */
+
+  main {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding-inline: var(--gutter);
+    padding-block: clamp(2.75rem, 7vw, 4.5rem) clamp(3.5rem, 9vw, 6rem);
+  }
+
+  .page-head {
+    margin-bottom: clamp(2.5rem, 6vw, 3.75rem);
+  }
+
+  .page-head .label { margin: 0 0 0.85rem; }
+  .page-head h1 { margin-bottom: 1.1rem; }
+
+  /* ---- Footer ----------------------------------------------------------- */
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-block: 1.75rem 2.5rem;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .footer-inner p { margin: 0; }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-links li { margin: 0; }
+
+  .footer-links a {
+    font-family: var(--font-mono-stack);
+    font-size: 0.78rem;
+    text-decoration: none;
+    color: var(--ink-muted);
+  }
+
+  .footer-links a:hover { color: var(--accent-hover); }
+
+  /* Below ~600px the five nav items can no longer share a row with the
+     wordmark, so the nav drops to its own full-width line and wraps. */
+  @media (max-width: 37.5rem) {
+    .masthead { position: static; }
+    .wordmark-role { display: none; }
+
+    .masthead-inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.7rem;
+      padding-block: 0.85rem;
+    }
+
+    nav ul { gap: 0.55rem 1.1rem; }
+    nav ul li:last-child { margin-left: auto; }
+    nav a { font-size: 0.72rem; }
+  }
+</style>
