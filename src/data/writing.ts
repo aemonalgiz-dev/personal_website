@@ -9,6 +9,13 @@ export interface Publication {
 
 export const publications: Publication[] = [
   {
+    title: 'Contextual Copying Failures Beyond Isolated Token Probes',
+    venue: 'Academia.edu',
+    kind: 'Paper',
+    url: 'https://www.academia.edu/176671076/Contextual_Copying_Failures_Beyond_Isolated_Token_Probes',
+    topics: ['Tokenization', 'Hallucinations', 'Homologies', 'LLMs'],
+  },
+  {
     title: 'Glitch Tokens Compared to Fragile Tokens',
     venue: 'Towards AI',
     kind: 'Article',
