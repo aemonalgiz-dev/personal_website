@@ -29,7 +29,7 @@ export const site = {
    * the outbound links are simply not rendered.
    */
   tutorials: {
-    url: '',
+    url: 'https://fitlab.dev',
     repo: 'machine_learning_tutorial',
     apiRepo: 'machine_learning_tutorial_api',
     libraryRepo: 'oop_ml',
