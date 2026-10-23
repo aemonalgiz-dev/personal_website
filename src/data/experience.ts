@@ -19,14 +19,32 @@ export interface Role {
 
 export const currentRoles: Role[] = [
   {
+    title: 'Staff Machine Learning Engineer',
+    org: 'Confidential (NDA)',
+    note: 'Contractor',
+    location: 'Tyler, Texas (Remote)',
+    start: '2024',
+    end: 'Present',
+    summary:
+      'Tools that help customers automate the selection and configuration of ' +
+      'ASR, TTS, and LLM models.',
+    points: [
+      'Building the entire backend that automates the configuration of drive-thru AI systems.',
+      'Integrating customer observability and evaluations for data-driven decision making.',
+      'Built automated testing with Mechanical Turk and Langfuse to test combinations of ASR, TTS, and LLM models and hyperparameters.',
+      'Designed a classifier to detect customer joyfulness, achieving an F1 score of 0.87.',
+    ],
+    stack: ['Python', 'PydanticAI', 'scikit-learn', 'Agentic SDKs', 'BERT', 'Postgres'],
+  },
+  {
     title: 'Principal Machine Learning Researcher',
-    org: 'Analytical Mechanics Associates (NASA)',
+    org: 'Analytical Mechanics Associates (CEOS/NASA Team)',
     location: 'Tyler, Texas',
     start: '2023',
     end: 'Present',
     points: [
-      'Authoring research with the Center for Earth Observation Sciences on agentic processes for GIS task automation: detecting urbanization, burn scars, and other environmental change from satellite spectral data.',
-      'Acting as in-house subject matter expert, keeping the research aligned with the state of the art.',
+      'Conducting research with the Committee on Earth Observation Satellites on agentic processes for GIS task automation, including the detection of urbanization, burn scars, and other local environmental changes using satellite spectral data.',
+      'Serving as the in-house subject matter expert to align research with state-of-the-art AI advancements.',
     ],
   },
 ];
@@ -40,7 +58,7 @@ export const pastRoles: Role[] = [
     end: 'August 2026',
     summary:
       'Checkmate is a leader in first- and third-party ordering and restaurant ' +
-      'management. I head Voice AI: automating drive-thru and phone ordering and ' +
+      'management. I led Voice AI: automating drive-thru and phone ordering and ' +
       'integrating it with menu management, digital menu boards, and prep time.',
     figures: [
       { value: '60% → 99.99%', label: 'Platform uptime' },
@@ -170,9 +188,9 @@ export const advisory: Role[] = [
     start: '2024',
     end: '2025',
     points: [
-      'Defined engineering hiring requirements before and after fundraising, for both development and operations.',
-      'Articulated the technical and business value proposition for the in-house automated prior-authorization platform.',
-      'Advised go-to-market and operational scaling, contributing to ARR growth beyond $15M.',
+      'Detailed engineering hiring requirements for development and operations before and after fundraising.',
+      "Provided technical and business KPIs for Develop Health's in-house prior authorization submission process using APIs from Express Scripts, Prime Therapeutics, and other PBMs.",
+      'Advised on the go-to-market strategy and operational scaling, contributing to ARR growth beyond $10M and expanded market penetration.',
     ],
   },
 ];
@@ -190,7 +208,7 @@ export const education: Degree[] = [
     degree: 'M.S. in Electrical and Computer Engineering',
     school: 'University of New Mexico',
     location: 'Albuquerque, New Mexico',
-    years: '2008 – 2009',
+    years: '2011 – 2012',
     detail: [
       'Focus on machine learning and algorithms',
       'Thesis on machine learning in natural language processing',
@@ -201,7 +219,7 @@ export const education: Degree[] = [
     degree: 'B.S. in Mechanical Engineering and Applied Mathematics',
     school: 'University of New Mexico',
     location: 'Albuquerque, New Mexico',
-    years: '2004 – 2008',
+    years: '2007 – 2011',
     detail: [
       'Summa cum laude',
       'Formula SAE: drivetrain and controllers',
